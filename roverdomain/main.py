@@ -7,6 +7,7 @@ import csv; import os; import sys
 import numpy as np
 import warnings
 
+perfServer = 2;
 
 def get_parameters():
     """
@@ -136,6 +137,7 @@ def rovers_global_only(reward_type):
 
                 # Update fitness of policies using reward information
                 global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
+                perfServer = global_reward;
                 for rv_id in range(p["n_rovers"]):
                     policy_id = int(rv["EA{0}".format(rv_id)].team_selection[team_number])
                     rv["EA{0}".format(rv_id)].fitness[policy_id] = global_reward
@@ -159,7 +161,13 @@ def rovers_global_only(reward_type):
                     rv["AG{0}".format(rv_id)].step(p["x_dim"], p["y_dim"])
                     rd.update_rover_path(rv["AG{0}".format(rv_id)], rv_id, step_id)
 
+            # \('u')/ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Performance value to show on server!!!
+        
             global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
+            print(perfServer)
+            perfServer = global_reward;
+            #would update server right here!!!
             reward_history.append(global_reward)
 
             if gen == (p["generations"] - 1):  # Save path at end of final generation
@@ -352,6 +360,33 @@ def main(reward_type="Global"):
     :return:
     """
 
+    # \('u')/ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #TO-DO: server startup code here
+    import flask
+    from flask import request, jsonify
+
+    
+    app = flask.Flask(__name__)
+    app.config["DEBUG"] = True
+
+    #rover test data
+    domaindata = [
+    {
+        'performance': perfServer #arbitrary test number
+    }
+    ]
+
+    @app.route('/', methods=['GET'])
+    def home():
+        return '''<h1>Roverdomain Data</h1>
+    <p>A prototype API for sending roverdomain performance data.</p>'''
+
+    @app.route('/api/v1/resources/domaindata/all', methods=['GET'])
+    def api_all():
+        return jsonify(domaindata)
+
+    app.run()
+
     warnings.filterwarnings("ignore", category=RuntimeWarning)
     if reward_type == "Global":
         rovers_global_only(reward_type)
@@ -362,5 +397,5 @@ def main(reward_type="Global"):
     else:
         sys.exit('Incorrect Reward Type')
 
-
+print("Beginning rover program...")
 main(reward_type="Global")  # Run the program
