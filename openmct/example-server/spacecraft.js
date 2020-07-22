@@ -34,7 +34,7 @@ function Spacecraft() {
     setInterval(function () { //updates rovers state every second?
         this.updateState();
         this.generateTelemetry();
-    }.bind(this), 1000);
+    }.bind(this), 2000);
 };
 
 /**

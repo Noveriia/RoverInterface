@@ -8,7 +8,6 @@ import numpy as np
 import warnings
 import flask
 from flask import request, jsonify
-import requests
 
 performanceVal = 5; #global variable to track performance values so server can manipulate them, currently assigned to arbitrary non-zero number
 
@@ -140,6 +139,7 @@ def rovers_global_only(reward_type):
 
                 # Update fitness of policies using reward information
                 global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
+                perfServer = global_reward;
                 for rv_id in range(p["n_rovers"]):
                     policy_id = int(rv["EA{0}".format(rv_id)].team_selection[team_number])
                     rv["EA{0}".format(rv_id)].fitness[policy_id] = global_reward
@@ -169,12 +169,11 @@ def rovers_global_only(reward_type):
             # / __/ _ \ / _` |/ _ \ | '_ ` _ \ / _` | '__| |/ / _ \ '__|
             #| (_| (_) | (_| |  __/ | | | | | | (_| | |  |   <  __/ |   
             # \___\___/ \__,_|\___| |_| |_| |_|\__,_|_|  |_|\_\___|_|
+            # \('u')/ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # Performance value to show on server!!!
             
             global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
-
-            requests.get("http://127.0.0.1:5000/api/v1/resources/domaindata/change", data=str(global_reward))
-            #performanceVal = global_reward; #update performance for server data
-
+            performanceVal = global_reward; #update performance for server data
             reward_history.append(global_reward)
 
             if gen == (p["generations"] - 1):  # Save path at end of final generation
@@ -360,11 +359,51 @@ def rovers_dpp_rewards(reward_type):
         save_reward_history(reward_history, "DPP_Reward.csv")
     run_visualizer(p)
 
+def getDomainData():
+    data = [
+    {
+        'performance': performanceVal
+    }
+    ]
+    return data
+
 def main(reward_type="Global"):
     """
     reward_type: Global, Difference, or DPP
     :return:
     """
+
+    #               _                             _             
+    #              | |                           | |            
+    #  ___ ___   __| | ___   _ __ ___   __ _ _ __| | _____ _ __ 
+    # / __/ _ \ / _` |/ _ \ | '_ ` _ \ / _` | '__| |/ / _ \ '__|
+    #| (_| (_) | (_| |  __/ | | | | | | (_| | |  |   <  __/ |   
+    # \___\___/ \__,_|\___| |_| |_| |_|\__,_|_|  |_|\_\___|_|   
+    # \('u')/ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #TO-DO: server startup code here
+    #I tried to keep the server stuff in one place to make it easier to delete in the future
+
+    app = flask.Flask(__name__)
+    app.config["DEBUG"] = True
+
+    ''' #rover test data
+    domaindata = [
+    {
+        'performance': perfServer #arbitrary test number
+    }
+    ] '''
+
+    @app.route('/', methods=['GET'])
+    def home():
+        return ''' <h1>Roverdomain Data</h1>
+    <p>A prototype API for sending roverdomain performance data.</p> '''
+
+    @app.route('/api/v1/resources/domaindata/all', methods=['GET'])
+    def api_all():
+        return jsonify(getDomainData())
+
+    app.run() 
+ 
     warnings.filterwarnings("ignore", category=RuntimeWarning)
     if reward_type == "Global":
         rovers_global_only(reward_type)
