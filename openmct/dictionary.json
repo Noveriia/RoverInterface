@@ -75,6 +75,47 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Reward Type",
+            "key": "reward",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value"
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Generation",
+            "key": "generation",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                     "units": "bytes",
+                    "format": "integer"
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
         }
+        
             ]
         }

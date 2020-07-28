@@ -21,7 +21,9 @@ function Spacecraft() {
     this.state = { 
         "performance": 0, 
         "comms.recd": 0,
-        "comms.sent": 0,      
+        "comms.sent": 0,
+        "reward": "n/a",
+        "generation": 0      
     };
 
     this.history = {}; 
@@ -43,11 +45,9 @@ function Spacecraft() {
 const fetch = require("node-fetch");//random fetch note: also had to install fetch into node packages with "npm i node-fetch --save"
 async function getDomainData() {
     try {
-        var result = await fetch(`http://127.0.0.1:5000/api/v1/resources/domaindata/all`); //url to python server
+        var result = await fetch(`http://127.0.0.1:5000/api/data`); //url to python server
         var data = await result.json();
-        var perf = data[0].performance;
-        //console.log(`Current performance is ${perf}`);
-        return perf;
+        return data;
     } catch(error) {
         console.log(error);
     }
@@ -59,8 +59,9 @@ async function getDomainData() {
  */
 Spacecraft.prototype.updateState = function () {
     getDomainData().then(data => {
-        this.state["performance"] = data;
-        //console.log(this.state["performance"]);
+        this.state["performance"] = data[0].performance;
+        this.state["reward"] = data[0].reward;
+        this.state["generation"] = data[0].generation;
     });
     this.generateTelemetry();
     this.state['comms.recd'] += 32;

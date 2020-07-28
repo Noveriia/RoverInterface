@@ -1,11 +1,11 @@
 import flask
-from flask import request, jsonify
+from flask import request, jsonify, send_file
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 global perfVal
-perfVal = 0
-
+global rewardType
+global generation
 
 @app.route('/', methods=['GET'])
 def home():
@@ -13,28 +13,58 @@ def home():
     <p>A prototype API for sending roverdomain performance data.</p>
     '''
 
-@app.route('/api/v1/resources/domaindata/all', methods=['GET'])
+@app.route('/api/data', methods=['GET'])
 def api_all():
     print('Got data from client')
     global perfval
+    global rewardType
+
+    print(rewardType)
     data = [
     {
-        'performance': perfVal #arbitrary test number
+        'performance': perfVal,
+        'reward': rewardType, 
+        'generation': generation     
     }
     ]
-    print('Inside data client: ' + str(perfVal))
+    print('Inside data client: ' + rewardType)
     return jsonify(data)
 
-@app.route('/api/v1/resources/domaindata/change', methods=['GET'])
+@app.route('/api/performance', methods=['GET'])
 def api_setPerformance():
     data = request.data
     datastring = data.decode("utf-8")
-    print('Data: ' + datastring)
+    #print('Data: ' + datastring)
 
     global perfVal 
     perfVal = data.decode("utf-8")
 
-    print('PerfVal: ' + str(perfVal))
-    return 'Finished!'
+    #print('PerfVal: ' + str(perfVal))
+    return 'Performance has been set'
 
+@app.route('/api/reward', methods=['GET'])
+def api_setRewardType():
+    data = request.data
+    datastring = data.decode("utf-8")
+    #print('Data: ' + datastring)
+
+    global rewardType 
+    rewardType = data.decode("utf-8")
+
+    #print('Reward Type: ' + str(rewardType))
+    return 'Reward type has been set'
+
+@app.route('/api/generation', methods=['GET'])
+def api_setGeneration():
+    data = request.data
+    datastring = data.decode("utf-8")
+    
+    global generation
+    generation = data.decode("utf-8")
+
+    return 'Generation has been set'
+
+@app.route('/api/get_image')
+def get_image():
+    return send_file('Screenshot.jpg', mimetype='image/gif')
 app.run() 

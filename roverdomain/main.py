@@ -105,6 +105,7 @@ def rovers_global_only(reward_type):
         rv["AG{0}".format(rv_id)] = Rover(p, rv_id, rd.rover_positions[rv_id])
         rv["EA{0}".format(rv_id)] = Ccea(p)
 
+    requests.get("http://127.0.0.1:5000/api/reward", data=reward_type)
     print("Reward Type: ", reward_type)
     print("Coupling Requirement: ", p["c_req"])
 
@@ -117,6 +118,7 @@ def rovers_global_only(reward_type):
         reward_history = []
 
         for gen in range(p["generations"]):
+            requests.get("http://127.0.0.1:5000/api/generation", data=str(gen)) #generation
             for rv_id in range(p["n_rovers"]):
                 rv["EA{0}".format(rv_id)].select_policy_teams()
             for team_number in range(p["pop_size"]):  # Each policy in CCEA is tested in teams
@@ -172,7 +174,7 @@ def rovers_global_only(reward_type):
             
             global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
 
-            requests.get("http://127.0.0.1:5000/api/v1/resources/domaindata/change", data=str(global_reward))
+            requests.get("http://127.0.0.1:5000/api/performance", data=str(global_reward))
             #performanceVal = global_reward; #update performance for server data
 
             reward_history.append(global_reward)
