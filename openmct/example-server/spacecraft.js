@@ -23,7 +23,8 @@ function Spacecraft() {
         "comms.recd": 0,
         "comms.sent": 0,
         "reward": "n/a",
-        "generation": 0      
+        "generation": 0,
+        "screencap": "http://127.0.0.1:5000/api/get_image"         
     };
 
     this.history = {}; 
@@ -62,6 +63,7 @@ Spacecraft.prototype.updateState = function () {
         this.state["performance"] = data[0].performance;
         this.state["reward"] = data[0].reward;
         this.state["generation"] = data[0].generation;
+        this.state["screencap"]= "http://127.0.0.1:5000/api/get_image";   
     });
     this.generateTelemetry();
     this.state['comms.recd'] += 32;

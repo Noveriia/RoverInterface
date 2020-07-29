@@ -115,6 +115,29 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "Screen",
+            "key": "screencap",
+            "values": [
+                {
+                    "name": "Image",
+                    "key": "url",
+                    "format": "image",
+                    "hints": {
+                    "image": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
         }
         
             ]
