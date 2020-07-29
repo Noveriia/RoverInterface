@@ -23,9 +23,10 @@ To run the frontend (requires node.js):
 
 Installing the interface:
 
-git clone https://github.com/Noveriia/RoverInterface.git
+```
+    git clone https://github.com/Noveriia/RoverInterface.git
 
-
+```
 
 
 
