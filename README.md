@@ -25,7 +25,6 @@ Installing the interface:
 
 ```
     git clone https://github.com/Noveriia/RoverInterface.git
-
 ```
 
 
