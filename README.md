@@ -21,6 +21,10 @@ To run the frontend (requires node.js):
     $ npm start
 ```
 
+Installing the interface:
+
+git clone https://github.com/Noveriia/RoverInterface.git
+
 
 
 

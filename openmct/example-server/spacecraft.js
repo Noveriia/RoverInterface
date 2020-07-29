@@ -43,7 +43,7 @@ function Spacecraft() {
 /**
  * Function to pull python data from server
  */
-const fetch = require("node-fetch");//random fetch note: also had to install fetch into node packages with "npm i node-fetch --save"
+const fetch = require("node-fetch");
 async function getDomainData() {
     try {
         var result = await fetch(`http://127.0.0.1:5000/api/data`); //url to python server
