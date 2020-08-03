@@ -1,11 +1,11 @@
 var express = require('express');
 
-function RealtimeServer(spacecraft) {
+function RealtimeServer(rovers) {
 
     var router = express.Router();
 
     router.ws('/', function (ws) {
-        var unlisten = spacecraft.listen(notifySubscribers);
+        var unlisten = rovers.listen(notifySubscribers);
         var subscribed = {}; // Active subscriptions for this connection
         var handlers = { // Handlers for specific requests
                 subscribe: function (id) {

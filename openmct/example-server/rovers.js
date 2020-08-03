@@ -1,23 +1,9 @@
-/*
-
-
-            _               _ _                                           __  
-           | |             | | |                                       _  \ \ 
-  __ _  ___| |_ _   _  __ _| | |_   _   _ __ _____   _____ _ __ ___   (_)  | |
- / _` |/ __| __| | | |/ _` | | | | | | | '__/ _ \ \ / / _ \ '__/ __|       | |
-| (_| | (__| |_| |_| | (_| | | | |_| | | | | (_) \ V /  __/ |  \__ \   _   | |
- \__,_|\___|\__|\__,_|\__,_|_|_|\__, | |_|  \___/ \_/ \___|_|  |___/  ( )  | |
-                                 __/ |                                |/  /_/ 
-                                |___/                                         
-
+/*                               
  rovers.js represents a group of small rovers from the roverdomain code
-
- I kept it named spacecraft because the rest of the servers (realtime/history) were already linked to a 
- "spacecraft" object and I really didn''t want to change all the name instances haha
 */
 
 //rovers object
-function Spacecraft() {
+function Rovers() {
     this.state = { 
         "performance": 0, 
         "comms.recd": 0,
@@ -58,7 +44,7 @@ async function getDomainData() {
  * Updates current performance value by pulling from roverdomain API. 
  * If the roverdomain server isn't running, this will fail. 
  */
-Spacecraft.prototype.updateState = function () {
+Rovers.prototype.updateState = function () {
     getDomainData().then(data => {
         this.state["performance"] = data[0].performance;
         this.state["reward"] = data[0].reward;
@@ -70,10 +56,10 @@ Spacecraft.prototype.updateState = function () {
 };
 
 /**
- * Takes a measurement of Spacecraft state, stores in history, and notifies 
+ * Takes a measurement of Rovers state, stores in history, and notifies 
  * listeners.
  */
-Spacecraft.prototype.generateTelemetry = function () {
+Rovers.prototype.generateTelemetry = function () {
     var timestamp = Date.now(), sent = 0;
     Object.keys(this.state).forEach(function (id) {
         var state = { timestamp: timestamp, value: this.state[id], id: id};
@@ -83,13 +69,13 @@ Spacecraft.prototype.generateTelemetry = function () {
     }, this);
 };
 
-Spacecraft.prototype.notify = function (point) {
+Rovers.prototype.notify = function (point) {
     this.listeners.forEach(function (l) {
         l(point);
     });
 };
 
-Spacecraft.prototype.listen = function (listener) {
+Rovers.prototype.listen = function (listener) {
     this.listeners.push(listener);
     return function () {
         this.listeners = this.listeners.filter(function (l) {
@@ -99,5 +85,5 @@ Spacecraft.prototype.listen = function (listener) {
 };
 
 module.exports = function () {
-    return new Spacecraft()
+    return new Rovers()
 };

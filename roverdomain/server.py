@@ -19,7 +19,7 @@ def api_all():
     global perfval
     global rewardType
 
-    print(rewardType)
+    #print(rewardType)
     data = [
     {
         'performance': perfVal,
@@ -27,7 +27,7 @@ def api_all():
         'generation': generation     
     }
     ]
-    print('Inside data client: ' + rewardType)
+    #print('Inside data client: ' + rewardType)
     return jsonify(data)
 
 @app.route('/api/performance', methods=['GET'])

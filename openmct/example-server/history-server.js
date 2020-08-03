@@ -1,6 +1,6 @@
 var express = require('express');
 
-function HistoryServer(spacecraft) {
+function HistoryServer(rovers) {
     var router = express.Router();
 
     router.get('/:pointId', function (req, res) {
@@ -9,7 +9,7 @@ function HistoryServer(spacecraft) {
         var ids = req.params.pointId.split(',');
 
         var response = ids.reduce(function (resp, id) {
-            return resp.concat(spacecraft.history[id].filter(function (p) {
+            return resp.concat(rovers.history[id].filter(function (p) {
                 return p.timestamp > start && p.timestamp < end;
             }));
         }, []);

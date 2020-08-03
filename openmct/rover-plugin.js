@@ -1,5 +1,5 @@
-function getDictionary() {
-    return http.get('/dictionary.json')
+function getRoverData() {
+    return http.get('/rover-data.json')
         .then(function (result) {
             return result.data;
         });
@@ -7,7 +7,7 @@ function getDictionary() {
 
 var objectProvider = {
     get: function (identifier) {
-        return getDictionary().then(function (dictionary) {
+        return getRoverData().then(function (dictionary) {
             if (identifier.key === 'spacecraft') {
                 return {
                     identifier: identifier,
@@ -39,7 +39,7 @@ var compositionProvider = {
                domainObject.type === 'folder';
     },
     load: function (domainObject) {
-        return getDictionary()
+        return getRoverData()
             .then(function (dictionary) {
                 return dictionary.measurements.map(function (m) {
                     return {
@@ -51,7 +51,7 @@ var compositionProvider = {
     }
 };
 
-var DictionaryPlugin = function (openmct) {
+var RoverPlugin = function (openmct) {
     return function install(openmct) {
         openmct.objects.addRoot({
             namespace: 'example.taxonomy',

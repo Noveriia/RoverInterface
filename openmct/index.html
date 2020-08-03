@@ -4,7 +4,7 @@
     <title>Rover Open MCT</title>
     <script src="node_modules/openmct/dist/openmct.js"></script>
     <script src="lib/http.js"></script>
-    <script src="dictionary-plugin.js"></script>
+    <script src="rover-plugin.js"></script>
     <script src="historical-telemetry-plugin.js"></script>
     <script src="realtime-telemetry-plugin.js"></script>
     <script src="realtime-telemetry-plugin.js"></script>
@@ -19,7 +19,7 @@
         openmct.time.timeSystem('utc');
         openmct.install(openmct.plugins.Espresso());
 
-        openmct.install(DictionaryPlugin());
+        openmct.install(RoverPlugin());
         openmct.install(HistoricalTelemetryPlugin());
         openmct.install(RealtimeTelemetryPlugin());
 

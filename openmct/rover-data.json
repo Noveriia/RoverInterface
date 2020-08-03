@@ -1,5 +1,5 @@
 {
-    "name": "Example Spacecraft",
+    "name": "Rover Telemetry Points",
     "key": "sc",
     "measurements": [
         {
@@ -139,6 +139,5 @@
                 }
             ]
         }
-        
             ]
         }
