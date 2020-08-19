@@ -63,9 +63,15 @@ var RoverPlugin = function (openmct) {
         openmct.composition.addProvider(compositionProvider);
 
         openmct.types.addType('example.telemetry', {
-            name: 'Example Telemetry Point',
-            description: 'Example telemetry point from our happy tutorial.',
+            name: 'Telemetry Point',
+            description: 'Just a telemetry point.',
             cssClass: 'icon-telemetry'
+        });
+
+        openmct.types.addType('example.imagery', {
+            name: 'Imagery Point',
+            description: 'Just an imagery point.',
+            cssClass: 'icon-imagery'
         });
     };
 };

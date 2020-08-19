@@ -165,11 +165,10 @@ def run_visualizer(p):
         if counter == 0:
             poi_convergence[p["n_poi"]] += 1
 
-        dir_name = 'roverdomain'  # Intended directory for output files
+        dir_name = 'Screenshots/'  # Intended directory for output files
         if not os.path.exists(dir_name):  # If Data directory does not exist, create it
             os.makedirs(dir_name)
-        image_name = "Screenshot.jpg"
-        #image_name = "Screenshot_SR" + str(srun) + ".jpg"
+        image_name = "Screenshot_SR" + str(srun) + ".jpg"
         screenshot_filename = os.path.join(dir_name, image_name)
 
         pygame.image.save(game_display, screenshot_filename)

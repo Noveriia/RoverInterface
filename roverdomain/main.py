@@ -10,8 +10,6 @@ import flask
 from flask import request, jsonify
 import requests
 
-performanceVal = 5; #global variable to track performance values so server can manipulate them, currently assigned to arbitrary non-zero number
-
 def get_parameters():
     """
     Create dictionary of parameters needed for simulation
@@ -105,7 +103,6 @@ def rovers_global_only(reward_type):
         rv["AG{0}".format(rv_id)] = Rover(p, rv_id, rd.rover_positions[rv_id])
         rv["EA{0}".format(rv_id)] = Ccea(p)
 
-    requests.get("http://127.0.0.1:5000/api/reward", data=reward_type)
     print("Reward Type: ", reward_type)
     print("Coupling Requirement: ", p["c_req"])
 
@@ -164,18 +161,10 @@ def rovers_global_only(reward_type):
                 for rv_id in range(p["n_rovers"]):
                     rv["AG{0}".format(rv_id)].step(p["x_dim"], p["y_dim"])
                     rd.update_rover_path(rv["AG{0}".format(rv_id)], rv_id, step_id)
-
-            #               _                             _             
-            #              | |                           | |            
-            #  ___ ___   __| | ___   _ __ ___   __ _ _ __| | _____ _ __ 
-            # / __/ _ \ / _` |/ _ \ | '_ ` _ \ / _` | '__| |/ / _ \ '__|
-            #| (_| (_) | (_| |  __/ | | | | | | (_| | |  |   <  __/ |   
-            # \___\___/ \__,_|\___| |_| |_| |_|\__,_|_|  |_|\_\___|_|
             
             global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
 
             requests.get("http://127.0.0.1:5000/api/performance", data=str(global_reward))
-            #performanceVal = global_reward; #update performance for server data
 
             reward_history.append(global_reward)
 
@@ -218,6 +207,7 @@ def rovers_difference_rewards(reward_type):
         reward_history = []
 
         for gen in range(p["generations"]):
+            requests.get("http://127.0.0.1:5000/api/generation", data=str(gen)) #generation
             for rv_id in range(p["n_rovers"]):
                 rv["EA{0}".format(rv_id)].select_policy_teams()
             for team_number in range(p["pop_size"]):  # Each policy in CCEA is tested in teams
@@ -241,6 +231,10 @@ def rovers_difference_rewards(reward_type):
                 # Update fitness of policies using reward information
                 global_reward = calc_global_reward(p, rd.rover_path, rd.pois)
                 difference_rewards = calc_difference_reward(p, rd.rover_path, rd.pois, global_reward)
+
+                requests.get("http://127.0.0.1:5000/api/performance", data=str(global_reward))
+                requests.get("http://127.0.0.1:5000/api/performance/difference", data=str(difference_rewards))
+               
                 for rv_id in range(p["n_rovers"]):
                     policy_id = int(rv["EA{0}".format(rv_id)].team_selection[team_number])
                     rv["EA{0}".format(rv_id)].fitness[policy_id] = difference_rewards[rv_id]
@@ -275,7 +269,6 @@ def rovers_difference_rewards(reward_type):
 
         save_reward_history(reward_history, "Difference_Reward.csv")
     run_visualizer(p)
-
 
 def rovers_dpp_rewards(reward_type):
     """
@@ -362,20 +355,23 @@ def rovers_dpp_rewards(reward_type):
         save_reward_history(reward_history, "DPP_Reward.csv")
     run_visualizer(p)
 
-def main(reward_type="Global"):
+def main(reward_type="Difference"):
     """
     reward_type: Global, Difference, or DPP
     :return:
     """
     warnings.filterwarnings("ignore", category=RuntimeWarning)
     if reward_type == "Global":
-        rovers_global_only(reward_type)
+         requests.get("http://127.0.0.1:5000/api/reward", data=str(0))
+         rovers_global_only(reward_type)
     elif reward_type == "Difference":
-        rovers_difference_rewards(reward_type)
+         requests.get("http://127.0.0.1:5000/api/reward", data=str(1))
+         rovers_difference_rewards(reward_type)
     elif reward_type == "DPP":
+        requests.get("http://127.0.0.1:5000/api/reward", data=str(2))
         rovers_dpp_rewards(reward_type)
     else:
         sys.exit('Incorrect Reward Type')
 
 print("Beginning rover program...")
-main(reward_type="Global")  # Run the program
+main(reward_type="Difference")  # Run the program

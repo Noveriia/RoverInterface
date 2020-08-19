@@ -3,8 +3,34 @@
     "key": "sc",
     "measurements": [
         {
-            "name": "Global Performance",
+            "name": "Global Performance Values",
             "key": "performance",
+            "values": [
+                {
+                    "key": "value",
+                    "name": "Value",
+                    "units": "points",
+                    "format": "float",
+                    "min": 0,
+                    "max": 50,
+                    "hints": {
+                        "range": 1
+                    }
+                },
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Difference Performance Values",
+            "key": "performanceDiff",
             "values": [
                 {
                     "key": "value",
@@ -82,7 +108,25 @@
             "values": [
                 {
                     "key": "value",
-                    "name": "Value"
+                    "name": "Value",
+                    "format": "enum",
+                    "enumerations": [
+                        {
+                            "string": "Global",
+                            "value": 0
+                        },
+                        {
+                            "string": "Difference",
+                            "value": 1
+                        },
+                        {
+                            "string": "DPP",
+                            "value": 2
+                        }
+                    ],
+                    "hints": {
+                        "range": 2
+                    }
                 },
                 {
                     "key": "utc",
@@ -119,7 +163,18 @@
         {
             "name": "Screen",
             "key": "screencap",
+            "type": "example.imagery",
             "values": [
+                {
+                    "key": "utc",
+                    "source": "timestamp",
+                    "name": "Timestamp",
+                    "format": "utc",
+                    "hints": {
+                        "domain": 1,
+                        "image": 1
+                    }
+                },
                 {
                     "name": "Image",
                     "key": "url",
@@ -127,16 +182,8 @@
                     "hints": {
                     "image": 1
                     }
-                },
-                {
-                    "key": "utc",
-                    "source": "timestamp",
-                    "name": "Timestamp",
-                    "format": "utc",
-                    "hints": {
-                        "domain": 1
-                    }
                 }
+
             ]
         }
             ]

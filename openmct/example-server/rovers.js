@@ -6,24 +6,25 @@
 function Rovers() {
     this.state = { 
         "performance": 0, 
+        "performanceDiff": 0,
         "comms.recd": 0,
         "comms.sent": 0,
-        "reward": "n/a",
+        "reward": 0,
         "generation": 0,
-        "screencap": "http://127.0.0.1:5000/api/get_image"         
+        "screencap": "http://127.0.0.1:5000/api/image.jpg"         
     };
 
     this.history = {}; 
     this.listeners = [];
 
-    Object.keys(this.state).forEach(function (k) { //clears history? not sure
+    Object.keys(this.state).forEach(function (k) { 
         this.history[k] = [];
     }, this);
 
-    setInterval(function () { //updates rovers state every second?
+    setInterval(function () { //updates rovers state every second
         this.updateState();
         this.generateTelemetry();
-    }.bind(this), 2000);
+    }.bind(this), 2000);// changing this value will change how often the rover pulls data from the server
 };
 
 /**
@@ -47,9 +48,9 @@ async function getDomainData() {
 Rovers.prototype.updateState = function () {
     getDomainData().then(data => {
         this.state["performance"] = data[0].performance;
+        this.state["performanceDiff"] = data[0].performanceDiff;
         this.state["reward"] = data[0].reward;
-        this.state["generation"] = data[0].generation;
-        this.state["screencap"]= "http://127.0.0.1:5000/api/get_image";   
+        this.state["generation"] = data[0].generation;   
     });
     this.generateTelemetry();
     this.state['comms.recd'] += 32;
