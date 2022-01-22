@@ -20,7 +20,7 @@
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
     "fetch": "^1.1.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.1.1",
     "openmct": "https://github.com/Noveriia/OpenMCT-for-Windows.git",
     "ws": "^6.1.2"
   }
